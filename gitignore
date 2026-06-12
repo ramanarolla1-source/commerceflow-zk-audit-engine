@@ -1,1 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
 
+# Cairo / Starknet
+target/
+*.sierra.json
+*.casm
+.cairo-cache/
+
+# IDE / Editor
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
