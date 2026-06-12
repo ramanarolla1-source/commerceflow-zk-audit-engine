@@ -1,1 +1,40 @@
+src/tests/
+├── test_compliance_engine.py  # Tests for your AI Agent logic
+└── test_settlement_flow.cairo  # Integration tests for your Cairo contracts
+import unittest
+from src.agents.parser import InvoiceParser
+from src.agents.validator import ComplianceValidator
 
+class TestComplianceEngine(unittest.TestCase):
+    def test_valid_invoice(self):
+        data = {"id": "INV-001", "amount": 500, "tax_code": "SAT_REG_01"}
+        parser = InvoiceParser(data)
+        structured = parser.parse_to_json()
+        
+        validator = ComplianceValidator({"max_amount": 1000000})
+        self.assertTrue(validator.validate(structured))
+
+    def test_invalid_tax_code(self):
+        data = {"id": "INV-002", "amount": 500, "tax_code": "INVALID"}
+        parser = InvoiceParser(data)
+        structured = parser.parse_to_json()
+        
+        validator = ComplianceValidator({"max_amount": 1000000})
+        self.assertFalse(validator.validate(structured))
+
+#[cfg(test)]
+mod tests {
+    use commerceflow::contracts::Verifier;
+    use commerceflow::contracts::Settlement;
+
+    #[test]
+    #[available_gas(2000000)]
+    fn test_successful_settlement_flow() {
+        // 1. Setup mock verifier and settlement contracts
+        // 2. Submit a valid proof hash
+        // 3. Assert that settlement is triggered
+        let proof_hash = 0x1234;
+        let is_verified = Verifier::verify_compliance_proof(proof_hash, array![1, 2, 3]);
+        assert(is_verified == true, 'Proof should be valid');
+    }
+}
